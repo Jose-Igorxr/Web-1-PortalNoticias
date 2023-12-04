@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Portal de Notícias</title>
+</head>
+<body>
+
+    <header class="bg-dark text-light text-center py-3">
+        <h1>Portal de Notícias</h1>
+    </header>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="javascript:void(0);" onclick="changeCategory('local')">Notícias Locais</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);" onclick="changeCategory('internacional')">Internacionais</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);" onclick="changeCategory('esportes')">Esportes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);" onclick="changeCategory('entretenimento')">Entretenimento</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 id="categoryTitle" class="card-title">Manchetes Principais</h2>
+                        <article id="newsContent">
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card mt-4 mt-lg-0">
+                    <div class="card-body">
+                        <h2>Destaques</h2>
+                        <ul id="categoryList" class="list-group">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <img src="img_MARIANA_trajedia-jornais_capaPO_20190328.jpg" alt="Imagem 1" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <img src="jornais-revistas-640x426.jpg" alt="Imagem 2" class="img-fluid">
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light text-center py-3 mt-4">
+        <p>Portal de Notícias</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        const newsData = {
+            local: [
+                { id: 1, title: 'Notícia Local 1', content: 'Conteúdo da notícia local 1.' },
+                { id: 2, title: 'Notícia Local 2', content: 'Conteúdo da notícia local 2.' }
+            ],
+            internacional: [
+                { id: 3, title: 'Notícia Internacional 1', content: 'Conteúdo da notícia internacional 1.' },
+                { id: 4, title: 'Notícia Internacional 2', content: 'Conteúdo da notícia internacional 2.' }
+            ],
+            esportes: [
+                { id: 5, title: 'Notícia de Esportes 1', content: 'Conteúdo da notícia de esportes 1.' },
+                { id: 6, title: 'Notícia de Esportes 2', content: 'Conteúdo da notícia de esportes 2.' }
+            ],
+            entretenimento: [
+                { id: 7, title: 'Notícia de Entretenimento 1', content: 'Conteúdo da notícia de entretenimento 1.' },
+                { id: 8, title: 'Notícia de Entretenimento 2', content: 'Conteúdo da notícia de entretenimento 2.' }
+            ]
+        };
+        function changeCategory(category) {
+            document.getElementById('categoryTitle').innerText = `Manchetes de ${category.charAt(0).toUpperCase() + category.slice(1)}`;
+            
+            const newsList = newsData[category];
+            const newsContent = newsList.map(news => `
+                <div>
+                    <h3>${news.title}</h3>
+                    <p class="card-text">${news.content}</p>
+                    <button onclick="editNews(${news.id})">Editar</button>
+                </div>`).join('');
+            document.getElementById('newsContent').innerHTML = newsContent;
+
+            
+            const categoryList = Object.keys(newsData);
+            const categoryItems = categoryList.map(cat => `<li class="list-group-item"><a href="javascript:void(0);" onclick="changeCategory('${cat}')">${cat.charAt(0).toUpperCase() + cat.slice(1)}</a></li>`).join('');
+            document.getElementById('categoryList').innerHTML = categoryItems;
+        }
+
+        
+        function editNews(newsId) {
+            const newsToEdit = findNewsById(newsId);
+            if (newsToEdit) {
+                const newTitle = prompt('Digite o novo título:', newsToEdit.title);
+                const newContent = prompt('Digite o novo conteúdo:', newsToEdit.content);
+
+                if (newTitle !== null && newContent !== null) {
+                    newsToEdit.title = newTitle;
+                    newsToEdit.content = newContent;
+                    changeCategory('local'); 
+                }
+            }
+        }
+
+        function findNewsById(newsId) {
+            for (const category in newsData) {
+                const newsList = newsData[category];
+                const foundNews = newsList.find(news => news.id === newsId);
+                if (foundNews) {
+                    return foundNews;
+                }
+            }
+            return null;
+        }
+
+        changeCategory('local');
+    </script>
+
+</body>
+</html>
+
+
